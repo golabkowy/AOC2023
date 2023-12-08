@@ -89,18 +89,15 @@ fun Hand.calculatePower(): Hand {
     }
 
     /*Uncomment this section for part TWO
-    *    if (holder.contains('J')) {
-        val max: Int? = holder.filterKeys { it != 'J' }.values.maxOrNull()
-        //jockers
-        if (max == null) {
-            holder['J'] = holder['J']?.plus(holder['J']!!)!!
-        } else {
-            val mostFrequents: List<Char> = holder.filter { it.value == max }.keys.sortedByDescending { cardValues[it] }
-            val doPodmiany: Char = mostFrequents[0]
-            holder[doPodmiany] = holder[doPodmiany]?.plus(holder['J']!!)!!
-            holder['J'] = 0
+        if (holder.contains('J')) {
+            val max: Int? = holder.filterKeys { it != 'J' }.values.maxOrNull()
+            //jockers
+            if (max != null) {
+                val replacement: Char = holder.filter { it.value == max }.keys.sortedByDescending { cardValues[it] }[0]
+                holder[replacement] = holder[replacement]?.plus(holder['J']!!)!!
+                holder['J'] = 0
+            }
         }
-    }
     * */
 
     if (holder.isFive()) {
@@ -128,10 +125,10 @@ fun Hand.calculatePower(): Hand {
 
     var multiplier = 10_000
     for (i in cards) {
-        if (i.isDigit()) {
-            power += (i.digitToInt() * multiplier)
+        power += if (i.isDigit()) {
+            (i.digitToInt() * multiplier)
         } else {
-            power += (cardValues[i]?.times(multiplier) ?: 0)
+            (cardValues[i]?.times(multiplier) ?: 0)
         }
         multiplier /= 10
     }
